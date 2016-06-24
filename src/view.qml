@@ -3,17 +3,24 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 
 ApplicationWindow {
+  id: app
   visible: true
   title: "Kefia"
-  minimumWidth: 1200
+  minimumWidth: repoGroup.width + 40
   minimumHeight: 800
   x: 400
   y: 100
   ColumnLayout{
+    anchors.fill: parent
+    anchors.margins: 20
     RowLayout{
+      Layout.minimumHeight: repoGroup.height
+      Layout.maximumHeight: repoGroup.height
+      Layout.alignment: Qt.AlignTop
       GroupBox {
         title: "Repository"
         id: repoGroup
+        Layout.minimumHeight:height
 
         ColumnLayout {
           RadioButton {
@@ -79,27 +86,46 @@ ApplicationWindow {
         }
       }
     }
-
     ListModel {
       id: packages
       ListElement {
-        name: "Bill Smith"
-        number: "555 3264"
+        name: "yaourt"
+        version: "1.8.1-1"
+        group: "no group"
+        repo: "local"
       }
       ListElement {
-        name: "John Brown"
-        number: "555 8426"
+        name: "vivaldi"
+        version: "1.2.490.43-1"
+        group: "no group"
+        repo: "local"
       }
       ListElement {
-        name: "Sam Wise"
-        number: "555 0473"
+        name: "vi"
+        version: "1:070224-2"
+        group: "base"
+        repo: "core"
       }
     }
 
     ListView {
+      id: mainList
+      Layout.fillWidth: true
+      Layout.alignment: Qt.AlignBottom
+      Layout.minimumHeight: 800 - repoGroup.height
       model: packages
-      delegate: Text {
-        text: name + ": " + number
+      delegate:
+      RowLayout {
+        width: mainList.width
+        Text {
+          id: text
+          Layout.alignment: Qt.AlignLeft
+          text: name
+        }
+        Text {
+          Layout.alignment: Qt.AlignRight
+          text: " (" + version + ")"
+        }
       }
     }
   }
