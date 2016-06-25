@@ -6,14 +6,18 @@ ApplicationWindow {
   id: app
   visible: true
   title: "Kefia"
-  minimumWidth: repoGroup.width + 40
-  minimumHeight: 800
+  minimumWidth: allGroupsLayout.width + 40
+  maximumWidth: allGroupsLayout.width + 40
+  minimumHeight: 600
   x: 400
   y: 100
   ColumnLayout{
     anchors.fill: parent
     anchors.margins: 20
     RowLayout{
+      id: allGroupsLayout
+      // anchors.left: parent.left
+      // anchors.margins: 15
       Layout.minimumHeight: repoGroup.height
       Layout.maximumHeight: repoGroup.height
       Layout.alignment: Qt.AlignTop
@@ -21,6 +25,7 @@ ApplicationWindow {
         title: "Repository"
         id: repoGroup
         Layout.minimumHeight:height
+        Layout.alignment: Qt.AlignLeft
 
         ColumnLayout {
           RadioButton {
@@ -54,6 +59,7 @@ ApplicationWindow {
       }
       GroupBox {
         title: "Group"
+        Layout.alignment: Qt.AlignRight
 
         ColumnLayout {
           RadioButton {
@@ -91,23 +97,45 @@ ApplicationWindow {
       LISTPKGS
     }
 
-    ListView {
-      id: mainList
+    ScrollView {
       Layout.fillWidth: true
       Layout.alignment: Qt.AlignBottom
-      Layout.minimumHeight: 800 - repoGroup.height
-      model: packages
-      delegate:
-      RowLayout {
-        width: mainList.width
-        Text {
-          id: text
-          Layout.alignment: Qt.AlignLeft
-          text: name
+      Layout.fillHeight: true
+      ListView {
+        id: mainList
+        model: packages
+        delegate:
+        RowLayout {
+          width: mainList.width
+          Text {
+            id: text
+            Layout.alignment: Qt.AlignLeft
+            text: name
+          }
+          Text {
+            Layout.alignment: Qt.AlignRight
+            text: " (" + version + ")"
+            color: "gray"
+          }
         }
-        Text {
-          Layout.alignment: Qt.AlignRight
-          text: " (" + version + ")"
+
+        section.property: "group"
+        section.criteria: ViewSection.FullString
+        section.delegate: sectionHeading
+        // The delegate for each section header
+        Component {
+          id: sectionHeading
+          Rectangle {
+            width: mainList.width
+            height: childrenRect.height
+            color: "lightsteelblue"
+
+            Text {
+              text: section
+              font.bold: true
+              font.pixelSize: 20
+            }
+          }
         }
       }
     }

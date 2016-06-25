@@ -2,6 +2,7 @@
 name = "kefia"
 version = "0.1.0"
 dependencies = [
+ "lazysort 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "qmlrs 0.1.1 (git+https://github.com/White-Oak/qmlrs?branch=qtcharts-fix)",
  "regex 0.1.71 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -21,6 +22,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "winapi 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "lazysort"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -48,6 +57,14 @@ source = "git+https://github.com/White-Oak/qmlrs?branch=qtcharts-fix#d06123b0a4e
 dependencies = [
  "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "pkg-config 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "rand"
+version = "0.3.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

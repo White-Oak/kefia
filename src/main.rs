@@ -1,5 +1,8 @@
 extern crate regex;
 extern crate qmlrs;
+extern crate lazysort;
+
+use lazysort::*;
 
 use std::process::Command;
 use regex::*;
@@ -27,6 +30,8 @@ fn main() {
             meta: from.split(' ').collect(),
         });
     }
+    let pkgs: Vec<Package> = pkgs.into_iter().sorted_by(|a, b| a.group.cmp(b.group)).collect();
+
     show(&pkgs);
 }
 

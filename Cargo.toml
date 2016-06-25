@@ -5,6 +5,7 @@ authors = ["White-Oak <lpzhelud@gmail.com>"]
 
 [dependencies]
 regex = "*"
+lazysort = "*"
 
 [dependencies.qmlrs]
 git = "https://github.com/White-Oak/qmlrs"
