@@ -1,7 +1,12 @@
 extern crate regex;
+extern crate qmlrs;
 
 use std::process::Command;
 use regex::*;
+
+mod view;
+
+use view::*;
 
 fn main() {
     let output = Command::new("yaourt")
@@ -22,16 +27,13 @@ fn main() {
             meta: from.split(' ').collect(),
         });
     }
-
-    for pkg in pkgs {
-        println!("{:?}", pkg)
-    }
+    show(&pkgs);
 }
 
 #[derive(Debug)]
-struct Package<'a> {
-    name: &'a str,
-    group: &'a str,
-    version: &'a str,
-    meta: Vec<&'a str>,
+pub struct Package<'a> {
+    pub name: &'a str,
+    pub group: &'a str,
+    pub version: &'a str,
+    pub meta: Vec<&'a str>,
 }

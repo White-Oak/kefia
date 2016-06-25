@@ -88,24 +88,7 @@ ApplicationWindow {
     }
     ListModel {
       id: packages
-      ListElement {
-        name: "yaourt"
-        version: "1.8.1-1"
-        group: "no group"
-        repo: "local"
-      }
-      ListElement {
-        name: "vivaldi"
-        version: "1.2.490.43-1"
-        group: "no group"
-        repo: "local"
-      }
-      ListElement {
-        name: "vi"
-        version: "1:070224-2"
-        group: "base"
-        repo: "core"
-      }
+      LISTPKGS
     }
 
     ListView {
