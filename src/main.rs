@@ -1,5 +1,5 @@
 extern crate regex;
-extern crate qmlrs;
+extern crate qml;
 extern crate lazysort;
 
 use lazysort::*;

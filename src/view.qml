@@ -92,10 +92,6 @@ ApplicationWindow {
         }
       }
     }
-    ListModel {
-      id: packages
-      LISTPKGS
-    }
 
     ScrollView {
       Layout.fillWidth: true
@@ -119,7 +115,7 @@ ApplicationWindow {
           }
         }
 
-        section.property: "group"
+        section.property: "repo"
         section.criteria: ViewSection.FullString
         section.delegate: sectionHeading
         // The delegate for each section header

@@ -7,6 +7,5 @@ authors = ["White-Oak <lpzhelud@gmail.com>"]
 regex = "*"
 lazysort = "*"
 
-[dependencies.qmlrs]
-git = "https://github.com/White-Oak/qmlrs"
-branch = "qtcharts-fix"
+[dependencies.qml]
+git = "https://github.com/White-Oak/qml-rust.git"

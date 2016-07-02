@@ -3,7 +3,7 @@ name = "kefia"
 version = "0.1.0"
 dependencies = [
  "lazysort 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "qmlrs 0.1.1 (git+https://github.com/White-Oak/qmlrs?branch=qtcharts-fix)",
+ "qml 0.0.2 (git+https://github.com/White-Oak/qml-rust.git)",
  "regex 0.1.71 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -34,7 +34,7 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.12"
+version = "0.2.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -42,7 +42,7 @@ name = "memchr"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -51,11 +51,11 @@ version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "qmlrs"
-version = "0.1.1"
-source = "git+https://github.com/White-Oak/qmlrs?branch=qtcharts-fix#d06123b0a4e647732d5478cf094a957893110af0"
+name = "qml"
+version = "0.0.2"
+source = "git+https://github.com/White-Oak/qml-rust.git#a82579f862b0567b9bde09344678a144838c9315"
 dependencies = [
- "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "pkg-config 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -64,7 +64,7 @@ name = "rand"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -90,7 +90,7 @@ version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
