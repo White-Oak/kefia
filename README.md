@@ -5,12 +5,12 @@ Application is done mostly to illustrate usage of [QML bindings for Rust](https:
 # Features
 
 Currently only:
-* Lists packages grouped by repo they came from
+* Lists packages grouped by repo they came from.
+* View only packages in a selected group or a repository.
 
 To be implemented:
-* View only packages in selected groups, repositories
-* Select certain packages in a list and form a string to copy and/or perform a certain action on them (e.g. delete)
-* Update AUR packages (source their PKGBUILD to see if a new version is out)
+* Select certain packages in a list and form a string to copy and/or perform a certain action on them (e.g. delete.)
+* Update AUR packages (source their PKGBUILD to see if a new version is out).
 
 # Usage
 
