@@ -54,9 +54,7 @@ ApplicationWindow {
               anchors.verticalCenter: someRepos.verticalCenter
               enabled: false
               model: repos
-              Component.onCompleted: {
-                activated.connect(qpkgs.request_update_repo)
-              }
+              Component.onCompleted: activated.connect(qpkgs.request_update_repo)
             }
           }
         }
@@ -83,6 +81,7 @@ ApplicationWindow {
             onClicked: {
               groupCB.enabled = true
               allGroups.checked = false
+              qpkgs.request_update_group(-1)
             }
             ComboBox {
               id: groupCB
@@ -90,7 +89,8 @@ ApplicationWindow {
               anchors.left: someGroups.right
               anchors.verticalCenter: someGroups.verticalCenter
               enabled: false
-              model: [ "base", "base-devel", "plasma" ]
+              model: groups
+              Component.onCompleted: activated.connect(qpkgs.request_update_group)
             }
           }
         }
