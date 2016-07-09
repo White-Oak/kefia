@@ -47,38 +47,31 @@ pub struct Packages {
     repos: Vec<String>,
 }
 
+fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<Vec<QVariant>>
+    where P: FnMut(&&Package) -> bool
+{
+    vec.into_iter()
+        .filter(filter)
+        .map(|pkg| {
+            let meta = match pkg.meta.first() {
+                Some(k) => k.as_str().into(),
+                None => "".into(),
+            };
+            vec![QVariant::from(pkg.name.as_str()),
+                 pkg.version.as_str().into(),
+                 pkg.group.as_str().into(),
+                 meta]
+        })
+        .collect()
+}
+
 impl Packages {
     fn request_update_repo(&mut self, r: i32) {
         println!("r: {}", r);
         if r == -1 {
-            self.list.set_data(self.vec
-                .iter()
-                .map(|pkg| {
-                    let meta = match pkg.meta.first() {
-                        Some(k) => k.as_str().into(),
-                        None => "".into(),
-                    };
-                    vec![QVariant::from(pkg.name.as_str()),
-                         pkg.version.as_str().into(),
-                         pkg.group.as_str().into(),
-                         meta]
-                })
-                .collect())
+            self.list.set_data(package_to_qvar(&self.vec, |_| true))
         } else {
-            let vec = self.vec
-                .iter()
-                .filter(|pkg| pkg.group == self.repos[r as usize])
-                .map(|pkg| {
-                    let meta = match pkg.meta.first() {
-                        Some(k) => k.as_str().into(),
-                        None => "".into(),
-                    };
-                    vec![QVariant::from(pkg.name.as_str()),
-                         pkg.version.as_str().into(),
-                         pkg.group.as_str().into(),
-                         meta]
-                })
-                .collect();
+            let vec = package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[r as usize]);
             self.list.set_data(vec);
         }
     }
