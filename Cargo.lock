@@ -3,7 +3,7 @@ name = "kefia"
 version = "0.1.0"
 dependencies = [
  "lazysort 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "qml 0.0.2 (git+https://github.com/White-Oak/qml-rust.git)",
+ "qml 0.0.3 (git+https://github.com/White-Oak/qml-rust.git)",
  "regex 0.1.71 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -52,8 +52,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "qml"
-version = "0.0.2"
-source = "git+https://github.com/White-Oak/qml-rust.git#a82579f862b0567b9bde09344678a144838c9315"
+version = "0.0.3"
+source = "git+https://github.com/White-Oak/qml-rust.git#0555af8864e90b7cfdf77758845ccdc54978ee95"
 dependencies = [
  "libc 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "pkg-config 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",

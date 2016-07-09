@@ -36,6 +36,7 @@ ApplicationWindow {
             onClicked: {
               repoCB.enabled = false
               someRepos.checked = false
+              qpkgs.request_update_repo(-1)
             }
           }
           RadioButton {
@@ -52,7 +53,10 @@ ApplicationWindow {
               anchors.left: someRepos.right
               anchors.verticalCenter: someRepos.verticalCenter
               enabled: false
-              model: [ "core", "extra", "community" ]
+              model: repos
+              Component.onCompleted: {
+                activated.connect(qpkgs.request_update_repo)
+              }
             }
           }
         }

@@ -1,4 +1,5 @@
 extern crate regex;
+#[macro_use]
 extern crate qml;
 extern crate lazysort;
 
@@ -24,21 +25,21 @@ fn main() {
         let from = cap.at(4).unwrap_or("");
 
         pkgs.push(Package {
-            name: cap.at(2).unwrap_or(""),
-            group: cap.at(1).unwrap_or(""),
-            version: cap.at(3).unwrap_or(""),
-            meta: from.split(' ').collect(),
+            name: cap.at(2).unwrap_or("").into(),
+            group: cap.at(1).unwrap_or("").into(),
+            version: cap.at(3).unwrap_or("").into(),
+            meta: from.split(' ').map(|s| s.into()).collect(),
         });
     }
-    let pkgs: Vec<Package> = pkgs.into_iter().sorted_by(|a, b| a.group.cmp(b.group)).collect();
+    let pkgs: Vec<Package> = pkgs.into_iter().sorted_by(|a, b| a.group.cmp(&b.group)).collect();
 
-    show(&pkgs);
+    show(pkgs);
 }
 
 #[derive(Debug)]
-pub struct Package<'a> {
-    pub name: &'a str,
-    pub group: &'a str,
-    pub version: &'a str,
-    pub meta: Vec<&'a str>,
+pub struct Package {
+    pub name: String,
+    pub group: String,
+    pub version: String,
+    pub meta: Vec<String>,
 }
