@@ -42,44 +42,39 @@ pub fn show(gathered: Vec<Package>) {
     engine.exec();
 }
 
-fn form_list(gathered: &[Package]) -> Box<QListModel<'static>> {
-    let mut qalm = QListModel::new(&["name", "version", "repo", "group"]);
-    for pkg in gathered {
-        // should be an array
-        let meta = match pkg.meta.first() {
-            Some(k) => k.as_str().into(),
-            None => "".into(),
-        };
-        qalm.insert_row(vec![QVariant::from(pkg.name.as_str()),
-                             pkg.version.as_str().into(),
-                             pkg.group.as_str().into(),
-                             meta]
-            .into_iter());
+Q_LISTMODEL!{
+    pub QPackageList {
+        name: &str,
+        version: &str,
+        repo: &str,
+        group: &str,
     }
+}
+
+fn form_list(gathered: &[Package]) -> QPackageList {
+    let mut qalm = QPackageList::new();
+    qalm.set_data(package_to_qvar(gathered, |_| true));
     qalm
 }
 
 pub struct Packages {
     vec: Vec<Package>,
-    list: Box<QListModel<'static>>,
+    list: QPackageList,
     repos: Vec<String>,
     groups: Vec<String>,
 }
 
-fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<Vec<QVariant>>
+fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(&str, &str, &str, &str)>
     where P: FnMut(&&Package) -> bool
 {
     vec.into_iter()
         .filter(filter)
         .map(|pkg| {
             let meta = match pkg.meta.first() {
-                Some(k) => k.as_str().into(),
-                None => "".into(),
+                Some(k) => k,
+                None => "",
             };
-            vec![QVariant::from(pkg.name.as_str()),
-                 pkg.version.as_str().into(),
-                 pkg.group.as_str().into(),
-                 meta]
+            (pkg.name.as_str(), pkg.version.as_str(), pkg.group.as_str(), meta)
         })
         .collect()
 }
