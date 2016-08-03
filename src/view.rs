@@ -32,6 +32,8 @@ pub fn show(gathered: Vec<Package>) {
         list: list,
         repos: repos,
         groups: groups,
+        chosen_repo: -1,
+        chosen_group: -1,
     });
     engine.set_property("packages", &qvar);
     engine.set_and_store_property("qpkgs", qpckgs.get_qobj());
@@ -62,6 +64,8 @@ pub struct Packages {
     list: QPackageList,
     repos: Vec<String>,
     groups: Vec<String>,
+    chosen_repo: i32,
+    chosen_group: i32,
 }
 
 fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(&str, &str, &str, &str)>
@@ -81,21 +85,24 @@ fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(&str, &str, &str, &str
 
 impl Packages {
     fn request_update_repo(&mut self, r: i32) {
-        if r == -1 {
-            self.list.set_data(package_to_qvar(&self.vec, |_| true))
-        } else {
-            let vec = package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[r as usize]);
-            self.list.set_data(vec);
-        }
+        self.chosen_repo = r;
+        self.decide_and_update();
     }
 
     fn request_update_group(&mut self, r: i32) {
-        if r == -1 {
-            self.list.set_data(package_to_qvar(&self.vec, |_| true))
-        } else {
-            let vec = package_to_qvar(&self.vec, |pkg| pkg.meta.contains(&self.groups[r as usize]));
-            self.list.set_data(vec);
-        }
+        self.chosen_group = r;
+        self.decide_and_update();
+    }
+
+    fn decide_and_update(&mut self) {
+        let data = match (self.chosen_repo, self.chosen_group) {
+            (-1, -1) => package_to_qvar(&self.vec, |_| true),
+            (-1, group) =>  package_to_qvar(&self.vec, |pkg| pkg.meta.contains(&self.groups[group as usize])),
+            (repo, -1) =>  package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize]),
+            (repo, group) =>  package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize] &&
+                                                 pkg.meta.contains(&self.groups[group as usize])),
+        };
+        self.list.set_data(data);
     }
 }
 
