@@ -46,10 +46,10 @@ pub fn show(gathered: Vec<Package>) {
 
 Q_LISTMODEL!{
     pub QPackageList {
-        name: &str,
-        version: &str,
-        repo: &str,
-        group: &str,
+        name: String,
+        version: String,
+        repo: String,
+        group: String,
     }
 }
 
@@ -68,30 +68,32 @@ pub struct Packages {
     chosen_group: i32,
 }
 
-fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(&str, &str, &str, &str)>
+fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String, String)>
     where P: FnMut(&&Package) -> bool
 {
     vec.into_iter()
         .filter(filter)
         .map(|pkg| {
             let meta = match pkg.meta.first() {
-                Some(k) => k,
-                None => "",
+                Some(k) => k.clone(),
+                None => "".into(),
             };
-            (pkg.name.as_str(), pkg.version.as_str(), pkg.group.as_str(), meta)
+            (pkg.name.clone(), pkg.version.clone(), pkg.group.clone(), meta)
         })
         .collect()
 }
 
 impl Packages {
-    fn request_update_repo(&mut self, r: i32) {
+    fn request_update_repo(&mut self, r: i32) -> Option<&QVariant>{
         self.chosen_repo = r;
         self.decide_and_update();
+        None
     }
 
-    fn request_update_group(&mut self, r: i32) {
+    fn request_update_group(&mut self, r: i32) -> Option<&QVariant>{
         self.chosen_group = r;
         self.decide_and_update();
+        None
     }
 
     fn decide_and_update(&mut self) {
