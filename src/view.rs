@@ -44,10 +44,10 @@ pub fn show(gathered: Vec<Package>) {
 
 Q_LISTMODEL!{
     pub QPackageList {
-        name: &str,
-        version: &str,
-        repo: &str,
-        group: &str,
+        name: String,
+        version: String,
+        repo: String,
+        group: String,
     }
 }
 
@@ -64,38 +64,40 @@ pub struct Packages {
     groups: Vec<String>,
 }
 
-fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(&str, &str, &str, &str)>
+fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String, String)>
     where P: FnMut(&&Package) -> bool
 {
     vec.into_iter()
         .filter(filter)
         .map(|pkg| {
             let meta = match pkg.meta.first() {
-                Some(k) => k,
-                None => "",
+                Some(k) => k.clone(),
+                None => "".into(),
             };
-            (pkg.name.as_str(), pkg.version.as_str(), pkg.group.as_str(), meta)
+            (pkg.name.clone(), pkg.version.clone(), pkg.group.clone(), meta)
         })
         .collect()
 }
 
 impl Packages {
-    fn request_update_repo(&mut self, r: i32) {
+    fn request_update_repo(&mut self, r: i32) -> Option<&QVariant>{
         if r == -1 {
             self.list.set_data(package_to_qvar(&self.vec, |_| true))
         } else {
             let vec = package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[r as usize]);
             self.list.set_data(vec);
         }
+        None
     }
 
-    fn request_update_group(&mut self, r: i32) {
+    fn request_update_group(&mut self, r: i32) -> Option<&QVariant>{
         if r == -1 {
             self.list.set_data(package_to_qvar(&self.vec, |_| true))
         } else {
             let vec = package_to_qvar(&self.vec, |pkg| pkg.meta.contains(&self.groups[r as usize]));
             self.list.set_data(vec);
         }
+        None
     }
 }
 
