@@ -6,50 +6,61 @@ ApplicationWindow {
   id: app
   visible: true
   title: "Kefia"
-  minimumWidth: allGroupsLayout.width + 40
-  maximumWidth: allGroupsLayout.width + 40
+  property real margin: 10
+  minimumWidth: total.width
+  maximumWidth: total.width
+  width: total.width
   minimumHeight: 600
+  height: 600
   x: 400
   y: 100
-  ColumnLayout{
+  Item {
     anchors.fill: parent
-    anchors.margins: 20
-    RowLayout{
-      id: allGroupsLayout
-      // anchors.left: parent.left
-      // anchors.margins: 15
-      Layout.minimumHeight: repoGroup.height
-      Layout.maximumHeight: repoGroup.height
-      Layout.alignment: Qt.AlignTop
-      GroupBox {
-        title: "Repository"
-        id: repoGroup
-        Layout.minimumHeight:height
-        Layout.alignment: Qt.AlignLeft
+    anchors.margins: app.margin
+    GridLayout{
+      id: total
+      columns: 2
+      rows: 2
+      columnSpacing: 10
+      rowSpacing: 10
+      height: parent.height
+      RowLayout{
+        id: allGroupsLayout
+        Layout.minimumHeight: repoGroup.height
+        Layout.maximumHeight: repoGroup.height
+        Layout.column: 1
+        Layout.row: 1
+        GroupBox {
+          title: "Repository"
+          id: repoGroup
 
-        ColumnLayout {
-          RadioButton {
-            id: allRepos
-            text: " All"
-            checked: true
-            Layout.minimumWidth: implicitWidth + repoCB.width
-            onClicked: {
-              repoCB.enabled = false
-              someRepos.checked = false
-              qpkgs.request_update_repo(-1)
+          GridLayout {
+            columns: 2
+            rows: 2
+            RadioButton {
+              id: allRepos
+              text: " All"
+              checked: true
+              Layout.columnSpan: 2
+              onClicked: {
+                repoCB.enabled = false
+                someRepos.checked = false
+                qpkgs.request_update_repo(-1)
+              }
             }
-          }
-          RadioButton {
-            id: someRepos
-            checked: false
-            Layout.minimumHeight: implicitHeight + repoCB.height
-            onClicked: {
-              repoCB.enabled = true
-              allRepos.checked = false
+            RadioButton {
+              id: someRepos
+              checked: false
+              onClicked: {
+                repoCB.enabled = true
+                allRepos.checked = false
+              }
             }
             ComboBox {
               id: repoCB
-              width: 200
+              Layout.minimumWidth: 200
+              Layout.maximumWidth: 200
+              Layout.preferredWidth: 200
               anchors.left: someRepos.right
               anchors.verticalCenter: someRepos.verticalCenter
               enabled: false
@@ -58,34 +69,37 @@ ApplicationWindow {
             }
           }
         }
-      }
-      GroupBox {
-        title: "Group"
-        Layout.alignment: Qt.AlignRight
+        GroupBox {
+          title: "Group"
 
-        ColumnLayout {
-          RadioButton {
-            id: allGroups
-            text: " All"
-            checked: true
-            Layout.minimumWidth: implicitWidth + groupCB.width
-            onClicked: {
-              groupCB.enabled = false
-              someGroups.checked = false
+          GridLayout {
+            columns: 2
+            rows: 2
+
+            RadioButton {
+              id: allGroups
+              text: " All"
+              checked: true
+              Layout.columnSpan: 2
+              onClicked: {
+                groupCB.enabled = false
+                someGroups.checked = false
+              }
             }
-          }
-          RadioButton {
-            id: someGroups
-            checked: false
-            Layout.minimumHeight: implicitHeight + groupCB.height
-            onClicked: {
-              groupCB.enabled = true
-              allGroups.checked = false
-              qpkgs.request_update_group(-1)
+            RadioButton {
+              id: someGroups
+              checked: false
+              onClicked: {
+                groupCB.enabled = true
+                allGroups.checked = false
+                qpkgs.request_update_group(-1)
+              }
             }
             ComboBox {
               id: groupCB
-              width: 200
+              Layout.minimumWidth: 200
+              Layout.maximumWidth: 200
+              Layout.preferredWidth: 200
               anchors.left: someGroups.right
               anchors.verticalCenter: someGroups.verticalCenter
               enabled: false
@@ -95,49 +109,71 @@ ApplicationWindow {
           }
         }
       }
-    }
 
-    ScrollView {
-      Layout.fillWidth: true
-      Layout.alignment: Qt.AlignBottom
-      Layout.fillHeight: true
-      ListView {
-        id: mainList
-        model: packages
-        delegate:
-        RowLayout {
-          width: mainList.width
-          Text {
-            id: text
-            Layout.alignment: Qt.AlignLeft
-            text: name
-          }
-          Text {
-            Layout.alignment: Qt.AlignRight
-            text: " (" + version + ")"
-            color: "gray"
-          }
-        }
+      ScrollView {
+        Layout.alignment: Qt.AlignBottom
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        Layout.column: 1
+        Layout.row: 2
+        ListView {
+          id: mainList
+          model: packages
+          delegate:
+            RowLayout {
+              width: mainList.width - 10
+              x: mainList.x + 5
+              Text {
+                id: text
+                Layout.alignment: Qt.AlignLeft
+                text: name
+              }
+              Text {
+                Layout.alignment: Qt.AlignRight
+                text: " (" + version + ")"
+                color: "gray"
+              }
 
-        section.property: "repo"
-        section.criteria: ViewSection.FullString
-        section.delegate: sectionHeading
-        // The delegate for each section header
-        Component {
-          id: sectionHeading
-          Rectangle {
-            width: mainList.width
-            height: childrenRect.height
-            color: "lightsteelblue"
-
-            Text {
-              text: section
-              font.bold: true
-              font.pixelSize: 20
+              MouseArea {
+                  anchors.fill: parent
+                  onClicked: console.log("HI OAK "+index)
+              }
             }
-          }
+
+          section.property: "repo"
+          section.criteria: ViewSection.FullString
+          section.delegate:
+            Component {
+              Rectangle {
+                width: mainList.width
+                height: childrenRect.height
+                color: "lightsteelblue"
+
+                Text {
+                  text: section
+                  font.bold: true
+                  font.pixelSize: 20
+                }
+              }
+            }
         }
       }
+
+      Item{
+        Layout.column: 2
+        Layout.row: 1
+      }
+      TextArea {
+          id: packagesJoinedTextField
+          Layout.minimumWidth: allGroupsLayout.width
+          Layout.fillWidth: true
+          Layout.column: 2
+          Layout.row: 2
+          Layout.alignment: Qt.AlignBottom
+          Component.onCompleted: {
+            // qpkgs.notifyPackagesChanged.connect(Text)
+          }
+        }
     }
   }
 }
