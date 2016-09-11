@@ -145,8 +145,10 @@ ApplicationWindow {
                   onClicked: {
                     if (parent.color == app.color) {
                       parent.color = "lightskyblue"
+                      qpkgs.add_package(index)
                     } else {
                       parent.color = app.color
+                      qpkgs.remove_package(index)
                     }
                   }
               }
@@ -180,7 +182,10 @@ ApplicationWindow {
         Layout.rowSpan: 2
         Layout.alignment: Qt.AlignBottom
         Component.onCompleted: {
-          // qpkgs.notifyPackagesChanged.connect(Text)
+          function setText(text) {
+            packagesJoinedTextField.text = text
+          }
+          qpkgs.notify_packages_changed.connect(setText)
         }
       }
     }

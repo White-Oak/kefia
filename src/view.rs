@@ -34,6 +34,7 @@ pub fn show(gathered: Vec<Package>) {
         groups: groups,
         chosen_repo: -1,
         chosen_group: -1,
+        selected: SelectedPackages::new(),
     });
     engine.set_property("packages", &qvar);
     engine.set_and_store_property("qpkgs", qpckgs.get_qobj());
@@ -66,6 +67,11 @@ pub struct Packages {
     groups: Vec<String>,
     chosen_repo: i32,
     chosen_group: i32,
+    selected: SelectedPackages,
+}
+
+pub struct SelectedPackages {
+    vec: Vec<Package>,
 }
 
 fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String, String)>
@@ -83,14 +89,27 @@ fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String
         .collect()
 }
 
-impl Packages {
-    fn request_update_repo(&mut self, r: i32) -> Option<&QVariant>{
+Q_OBJECT!(
+    pub Packages as QPackages {
+        signals:
+            fn notify_packages_changed(text: String);
+        slots:
+            fn request_update_repo(r: i32);
+            fn request_update_group(r: i32);
+            fn add_package(i: i32);
+            fn remove_package(i: i32);
+        properties:
+    }
+);
+
+impl QPackages {
+    fn request_update_repo(&mut self, r: i32) -> Option<&QVariant> {
         self.chosen_repo = r;
         self.decide_and_update();
         None
     }
 
-    fn request_update_group(&mut self, r: i32) -> Option<&QVariant>{
+    fn request_update_group(&mut self, r: i32) -> Option<&QVariant> {
         self.chosen_group = r;
         self.decide_and_update();
         None
@@ -99,23 +118,50 @@ impl Packages {
     fn decide_and_update(&mut self) {
         let data = match (self.chosen_repo, self.chosen_group) {
             (-1, -1) => package_to_qvar(&self.vec, |_| true),
-            (-1, group) =>  package_to_qvar(&self.vec, |pkg| pkg.meta.contains(&self.groups[group as usize])),
-            (repo, -1) =>  package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize]),
-            (repo, group) =>  package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize] &&
-                                                 pkg.meta.contains(&self.groups[group as usize])),
+            (-1, group) => {
+                package_to_qvar(&self.vec,
+                                |pkg| pkg.meta.contains(&self.groups[group as usize]))
+            }
+            (repo, -1) => package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize]),
+            (repo, group) => {
+                package_to_qvar(&self.vec, |pkg| {
+                    pkg.group == self.repos[repo as usize] &&
+                    pkg.meta.contains(&self.groups[group as usize])
+                })
+            }
         };
         self.list.set_data(data);
     }
+
+    fn add_package(&mut self, index: i32) -> Option<&QVariant> {
+        let pkg = self.vec[index as usize].clone();
+        self.selected.add_package(pkg);
+        self.notify_packages_changed(self.selected.get_text());
+        None
+    }
+
+    fn remove_package(&mut self, index: i32) -> Option<&QVariant> {
+        let pkg = self.vec[index as usize].clone();
+        self.selected.remove_package(pkg);
+        self.notify_packages_changed(self.selected.get_text());
+        None
+    }
 }
 
-Q_OBJECT!(
-    pub Packages as QPackages {
-        signals:
-
-        slots:
-        fn request_update_repo(r: i32);
-        fn request_update_group(r: i32);
-
-        properties:
+impl SelectedPackages {
+    fn new() -> Self {
+        SelectedPackages { vec: Vec::new() }
     }
-);
+
+    fn add_package(&mut self, package: Package) {
+        self.vec.push(package);
+    }
+
+    fn remove_package(&mut self, package: Package) {
+        self.vec.retain(|p| p.name != package.name);
+    }
+
+    fn get_text(&self) -> String {
+        self.vec.iter().map(|p| &p.name as &str).collect::<Vec<&str>>().join(" ")
+    }
+}

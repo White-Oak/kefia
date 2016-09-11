@@ -10,7 +10,7 @@ use regex::*;
 
 mod view;
 
-use view::*;
+pub use view::*;
 
 fn main() {
     let output = Command::new("yaourt")
@@ -36,7 +36,7 @@ fn main() {
     show(pkgs);
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Package {
     pub name: String,
     pub group: String,
