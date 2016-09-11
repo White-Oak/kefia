@@ -113,6 +113,7 @@ ApplicationWindow {
       }
 
       ScrollView {
+        id: mainScrollView
         Layout.alignment: Qt.AlignBottom
         Layout.fillHeight: true
         Layout.fillWidth: true
@@ -122,23 +123,32 @@ ApplicationWindow {
           id: mainList
           model: packages
           delegate:
-            RowLayout {
-              width: mainList.width - 10
-              x: mainList.x + 5
-              Text {
-                id: text
-                Layout.alignment: Qt.AlignLeft
-                text: name
-              }
-              Text {
-                Layout.alignment: Qt.AlignRight
-                text: " (" + version + ")"
-                color: "gray"
+            Rectangle {
+              width: mainList.width
+              height: childrenRect.height
+              RowLayout {
+                x: mainList.x + 5
+                width: mainList.width - 10
+                Text {
+                  id: text
+                  text: name
+                }
+                Text {
+                  anchors.right: parent.right
+                  text: " (" + version + ")"
+                  color: "gray"
+                }
               }
 
               MouseArea {
                   anchors.fill: parent
-                  onClicked: console.log("HI OAK "+index)
+                  onClicked: {
+                    if (parent.color == app.color) {
+                      parent.color = "lightskyblue"
+                    } else {
+                      parent.color = app.color
+                    }
+                  }
               }
             }
 
