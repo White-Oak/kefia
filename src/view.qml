@@ -54,6 +54,7 @@ ApplicationWindow {
               onClicked: {
                 repoCB.enabled = true
                 allRepos.checked = false
+                qpkgs.request_update_repo(repoCB.currentIndex)
               }
             }
             ComboBox {
@@ -84,6 +85,7 @@ ApplicationWindow {
               onClicked: {
                 groupCB.enabled = false
                 someGroups.checked = false
+                qpkgs.request_update_group(-1)
               }
             }
             RadioButton {
@@ -92,7 +94,7 @@ ApplicationWindow {
               onClicked: {
                 groupCB.enabled = true
                 allGroups.checked = false
-                qpkgs.request_update_group(-1)
+                qpkgs.request_update_group(groupCB.currentIndex)
               }
             }
             ComboBox {
@@ -159,21 +161,18 @@ ApplicationWindow {
         }
       }
 
-      Item{
-        Layout.column: 2
-        Layout.row: 1
-      }
       TextArea {
-          id: packagesJoinedTextField
-          Layout.minimumWidth: allGroupsLayout.width
-          Layout.fillWidth: true
-          Layout.column: 2
-          Layout.row: 2
-          Layout.alignment: Qt.AlignBottom
-          Component.onCompleted: {
-            // qpkgs.notifyPackagesChanged.connect(Text)
-          }
+        id: packagesJoinedTextField
+        Layout.minimumWidth: allGroupsLayout.width
+        Layout.fillWidth: true
+        Layout.column: 2
+        Layout.row: 2
+        Layout.rowSpan: 2
+        Layout.alignment: Qt.AlignBottom
+        Component.onCompleted: {
+          // qpkgs.notifyPackagesChanged.connect(Text)
         }
+      }
     }
   }
 }
