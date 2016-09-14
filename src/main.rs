@@ -43,3 +43,14 @@ pub struct Package {
     pub version: String,
     pub meta: Vec<String>,
 }
+
+//impl Into<Package> for (String, String, String, String) {
+//    fn into(self) -> Package {
+//        Package {
+//            name: self.0,
+//            group: self.1
+//            version: self.2
+//            meta:
+//        }
+//    }
+//}

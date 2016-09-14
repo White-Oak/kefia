@@ -141,7 +141,8 @@ impl QPackages {
     }
 
     fn remove_package(&mut self, index: i32) -> Option<&QVariant> {
-        let pkg = self.vec[index as usize].clone();
+        let pkg_name = &self.list.view_data()[index as usize].0;
+        let pkg = self.vec.iter().find(|pkg| pkg_name == &pkg.name).unwrap().clone();
         self.selected.remove_package(pkg);
         self.notify_packages_changed(self.selected.get_text());
         None
