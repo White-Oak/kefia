@@ -1,3 +1,4 @@
+#![feature(box_syntax)]
 extern crate regex;
 #[macro_use]
 extern crate qml;
@@ -29,6 +30,7 @@ fn main() {
             group: cap.at(1).unwrap_or("").into(),
             version: cap.at(3).unwrap_or("").into(),
             meta: from.split(' ').map(|s| s.into()).collect(),
+            selected: false
         });
     }
     let pkgs: Vec<Package> = pkgs.into_iter().sorted_by(|a, b| a.group.cmp(&b.group)).collect();
@@ -36,12 +38,13 @@ fn main() {
     show(pkgs);
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Package {
     pub name: String,
     pub group: String,
     pub version: String,
     pub meta: Vec<String>,
+    pub selected: bool,
 }
 
 //impl Into<Package> for (String, String, String, String) {

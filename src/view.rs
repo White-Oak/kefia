@@ -51,12 +51,13 @@ Q_LISTMODEL!{
         version: String,
         repo: String,
         group: String,
+        selected: bool,
     }
 }
 
 fn form_list(gathered: &[Package]) -> QPackageList {
     let mut qalm = QPackageList::new();
-    qalm.set_data(package_to_qvar(gathered, |_| true));
+    qalm.set_data(filter_for_qml(gathered, |_| true, None));
     qalm
 }
 
@@ -74,7 +75,10 @@ pub struct SelectedPackages {
     vec: Vec<Package>,
 }
 
-fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String, String)>
+fn filter_for_qml<P>(vec: &[Package],
+                     filter: P,
+                     selecteds: Option<&SelectedPackages>)
+                     -> Vec<(String, String, String, String, bool)>
     where P: FnMut(&&Package) -> bool
 {
     vec.into_iter()
@@ -84,7 +88,12 @@ fn package_to_qvar<P>(vec: &[Package], filter: P) -> Vec<(String, String, String
                 Some(k) => k.clone(),
                 None => "".into(),
             };
-            (pkg.name.clone(), pkg.version.clone(), pkg.group.clone(), meta)
+            let selected = if let Some(selecteds) = selecteds {
+                selecteds.vec.contains(pkg)
+            } else {
+                false
+            };
+            (pkg.name.clone(), pkg.version.clone(), pkg.group.clone(), meta, selected)
         })
         .collect()
 }
@@ -116,25 +125,36 @@ impl QPackages {
     }
 
     fn decide_and_update(&mut self) {
-        let data = match (self.chosen_repo, self.chosen_group) {
-            (-1, -1) => package_to_qvar(&self.vec, |_| true),
-            (-1, group) => {
-                package_to_qvar(&self.vec,
-                                |pkg| pkg.meta.contains(&self.groups[group as usize]))
-            }
-            (repo, -1) => package_to_qvar(&self.vec, |pkg| pkg.group == self.repos[repo as usize]),
-            (repo, group) => {
-                package_to_qvar(&self.vec, |pkg| {
-                    pkg.group == self.repos[repo as usize] &&
-                    pkg.meta.contains(&self.groups[group as usize])
-                })
+        let data = {
+            let selected = Some(&self.selected);
+            match (self.chosen_repo, self.chosen_group) {
+                (-1, -1) => filter_for_qml(&self.vec, |_| true, selected),
+                (-1, group) => {
+                    filter_for_qml(&self.vec,
+                                   |pkg| pkg.meta.contains(&self.groups[group as usize]),
+                                   selected)
+                }
+                (repo, -1) => {
+                    filter_for_qml(&self.vec,
+                                   |pkg| pkg.group == self.repos[repo as usize],
+                                   selected)
+                }
+                (repo, group) => {
+                    filter_for_qml(&self.vec,
+                                   |pkg| {
+                                       pkg.group == self.repos[repo as usize] &&
+                                       pkg.meta.contains(&self.groups[group as usize])
+                                   },
+                                   selected)
+                }
             }
         };
         self.list.set_data(data);
     }
 
     fn add_package(&mut self, index: i32) -> Option<&QVariant> {
-        let pkg = self.vec[index as usize].clone();
+        let pkg_name = &self.list.view_data()[index as usize].0;
+        let pkg = self.vec.iter().find(|pkg| pkg_name == &pkg.name).unwrap().clone();
         self.selected.add_package(pkg);
         self.notify_packages_changed(self.selected.get_text());
         None

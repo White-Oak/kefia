@@ -126,6 +126,7 @@ ApplicationWindow {
             Rectangle {
               width: mainList.width
               height: childrenRect.height
+              color: selected ? "lightskyblue" : app.color
               RowLayout {
                 x: mainList.x + 5
                 width: mainList.width - 10
