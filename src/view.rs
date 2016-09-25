@@ -153,7 +153,14 @@ impl QPackages {
     }
 
     fn add_package(&mut self, index: i32) -> Option<&QVariant> {
-        let pkg_name = &self.list.view_data()[index as usize].0;
+        let pkg_in_list = &self.list.view_data()[index as usize];
+        self.list.change_line(index as usize,
+                              pkg_in_list.0.clone(),
+                              pkg_in_list.1.clone(),
+                              pkg_in_list.2.clone(),
+                              pkg_in_list.3.clone(),
+                              true);
+        let pkg_name = &pkg_in_list.0;
         let pkg = self.vec.iter().find(|pkg| pkg_name == &pkg.name).unwrap().clone();
         self.selected.add_package(pkg);
         self.notify_packages_changed(self.selected.get_text());
@@ -161,7 +168,14 @@ impl QPackages {
     }
 
     fn remove_package(&mut self, index: i32) -> Option<&QVariant> {
-        let pkg_name = &self.list.view_data()[index as usize].0;
+        let pkg_in_list = &self.list.view_data()[index as usize];
+        self.list.change_line(index as usize,
+                              pkg_in_list.0.clone(),
+                              pkg_in_list.1.clone(),
+                              pkg_in_list.2.clone(),
+                              pkg_in_list.3.clone(),
+                              false);
+        let pkg_name = &pkg_in_list.0;
         let pkg = self.vec.iter().find(|pkg| pkg_name == &pkg.name).unwrap().clone();
         self.selected.remove_package(pkg);
         self.notify_packages_changed(self.selected.get_text());
