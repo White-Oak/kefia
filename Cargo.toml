@@ -13,6 +13,6 @@ categories = ["gui"]
 license = "MIT"
 
 [dependencies]
-regex = "*"
-lazysort = "*"
-qml = "*"
+regex = "0.2.1"
+lazysort = "0.1.1"
+qml = "0.0.9"
