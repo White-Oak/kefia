@@ -10,6 +10,7 @@ repository = "https://github.com/White-Oak/kefia"
 readme = "./README.md"
 keywords = ["arch", "yaourt", "pacman", "qml", "gui"]
 categories = ["gui"]
+license = "MIT"
 
 [dependencies]
 regex = "*"
