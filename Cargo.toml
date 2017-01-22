@@ -2,10 +2,16 @@
 name = "kefia"
 version = "0.1.0"
 authors = ["White-Oak <lpzhelud@gmail.com>"]
+exclude = [
+    "res/*"
+]
+description = "A GUI for yaourt package manager on Arch systems"
+repository = "https://github.com/White-Oak/kefia"
+readme = "./README.md"
+keywords = ["arch", "yaourt", "pacman", "qml", "gui"]
+categories = ["gui"]
 
 [dependencies]
 regex = "*"
 lazysort = "*"
-
-[dependencies.qml]
-git = "https://github.com/White-Oak/qml-rust.git"
+qml = "*"

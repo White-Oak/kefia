@@ -23,13 +23,13 @@ fn main() {
     let re = Regex::new(r"(?m)^(\S+)/(\S+) (\S+)(?: \((.*)\))?$").unwrap();
     let mut pkgs = Vec::new();
     for cap in re.captures_iter(hello) {
-        let from = cap.at(4).unwrap_or("");
+        let from = cap.get(4).map_or("", |m| m.as_str());
 
         pkgs.push(Package {
-            name: cap.at(2).unwrap_or("").into(),
-            group: cap.at(1).unwrap_or("").into(),
-            version: cap.at(3).unwrap_or("").into(),
-            meta: from.split(' ').map(|s| s.into()).collect(),
+            name: cap.get(2).map_or("", |m| m.as_str()).into(),
+            group: cap.get(1).map_or("", |m| m.as_str()).into(),
+            version: cap.get(3).map_or("", |m| m.as_str()).into(),
+            meta: from.split_whitespace().map(|s| s.into()).collect(),
             selected: false
         });
     }

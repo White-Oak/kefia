@@ -51,7 +51,7 @@ Q_LISTMODEL!{
         version: String,
         repo: String,
         group: String,
-        selected: bool,
+        selected: bool
     }
 }
 
